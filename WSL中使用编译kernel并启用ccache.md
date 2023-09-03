@@ -1,6 +1,6 @@
 ---
-layout: post 
-title: Markdown Style Guide 
+layout: default
+title: 
 ---
 
 
