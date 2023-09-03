@@ -46,6 +46,21 @@ make[1]: Leaving directory '/mnt/f/work_code/android13_kernel1/out/android13-5.1
 make: *** [Makefile:244: __sub-make] Error 2
 
 ```
+* #### 解决方案：可以以管理员权限打开powershell，cd到目标代码目录，执行
+```
+(Get-ChildItem -Recurse -Directory).FullName | ForEach-Object {if (-Not ($_ -like '*node_modules*')) { fsutil.exe file setCaseSensitiveInfo $_ enable } }
+```
+wsl1中执行上面的设置应该就可以了，wsl2中可能需要修改wsl.conf之后重启wsl
+```
+[automount]
+options = case = dir
+```
+* #### wsl1编译kernel报错
 
+
+```
+sudo patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 /mnt/f/work_code/android13_kernel1/prebuilts/clang/host/linux-x86/clang-r450784e/bin/clang.real
+
+```
 
 
