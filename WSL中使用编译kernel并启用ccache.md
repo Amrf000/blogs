@@ -2,8 +2,6 @@
 layout: default
 title: WSL中使用编译kernel并启用ccache  
 ---
-
-
 ## WSL中使用编译kernel并启用ccache
 
 ### WSL2 mnt目录io缓慢问题
