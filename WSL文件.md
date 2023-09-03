@@ -119,7 +119,7 @@ index 6d082bd..541bdcf 100644
    NM=llvm-nm
 
 ```
-
+添加ccache工具链接到prebuilt仓
 ```
 build/kernel$ ls -al build-tools/path/linux-x86/ccache*
 
@@ -129,5 +129,102 @@ lrwxrwxrwx 1 liuyawu liuyawu 63 Sep 3 01:17 build-tools/path/linux-x86/ccache-cl
 
 lrwxrwxrwx 1 liuyawu liuyawu 65 Sep 3 01:17 build-tools/path/linux-x86/ccache-clang++ -> ../../../../../prebuilts/build-tools/linux-x86/bin/ccache-clang++
 ```
+common仓修改,Makefile修改
+```
+/mnt/f/work_code/android13_kernel1/common$ git diff Makefile
 
+diff --git a/Makefile b/Makefile
+
+index ab26272cd..20d0735bd 100644
+
+--- a/Makefile
+
++++ b/Makefile
+
+@@ -448,9 +448,11 @@ HOST_LFS_CFLAGS := $(shell getconf LFS_CFLAGS 2>/dev/null)
+
+ HOST_LFS_LDFLAGS := $(shell getconf LFS_LDFLAGS 2>/dev/null)
+
+ HOST_LFS_LIBS := $(shell getconf LFS_LIBS 2>/dev/null)
+
++#$(error "#########$(PATH)")
+
++
+
+ ifneq ($(LLVM),)
+
+-HOSTCC = clang
+
+-HOSTCXX = clang++
+
++HOSTCC = ccache-clang
+
++HOSTCXX = ccache-clang++
+
+ else
+
+ HOSTCC = gcc
+
+ HOSTCXX = g++
+
+@@ -470,7 +472,7 @@ KBUILD_HOSTLDLIBS := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
+
+ # Make variables (CC, etc...)
+
+ CPP = $(CC) -E
+
+ ifneq ($(LLVM),)
+
+-CC = clang
+
++CC = ccache-clang
+
+ LD = ld.lld
+
+ AR = llvm-ar
+
+ NM = llvm-nm
+
+```
+scripts/Kconfig.include
+```
+common$ git diff scripts/Kconfig.include
+
+diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+
+index 0496efd6e..7cc4285ef 100644
+
+--- a/scripts/Kconfig.include
+
++++ b/scripts/Kconfig.include
+
+@@ -36,7 +36,7 @@ ld-option = $(success,$(LD) -v $(1))
+
+ as-instr = $(success,printf "%b\n" "$(1)" | $(CC) $(CLANG_FLAGS) -c -x assembler -o /dev/null -)
+
+ # check if $(CC) and $(LD) exist
+
+-$(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
+
++#$(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
+
+ $(error-if,$(failure,command -v $(LD)),linker '$(LD)' not found)
+
+ # Get the compiler name, version, and error out if it is not supported.
+
+```
+prebuilts/build-tools添加ccache二进制
+
+```
+ linux-x86/bin/ccache
+ linux-x86/bin/ccache-clang
+ linux-x86/bin/ccache-clang++
+```
+ccache为4.83的版本amd64的可执行程序，记住添加可执行
+ccache-clang是一个wrapper脚本，记住添加可执行
+```
+#!/bin/bash
+exec ccache clang "$@"
+```
+修改完成即可使用ccache编译kernel，使用ccache -s -p查看命中信息
 
