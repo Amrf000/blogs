@@ -34,7 +34,7 @@ sudo vi /etc/wsl.conf
 ### WSL mnt目录中kernel编译
 * #### windows目录不区分大小写,会有如下的报错  
 
-```shell
+```bash
 compiler_wrapper.go:250: failed to execute &main.command{Path:"/mnt/f/work_code/android13_kernel1/prebuilts/clang/host/linux-x86/clang-r450784e/bin/clang.real", Args:[]string{"-print-file-name=include"}, EnvUpdates:[]string(nil)}: go_exec.go:22: exec error: exec format error
 
 make[2]: *** /mnt/f/work_code/android13_kernel1/common/Documentation/Kbuild: Is a directory. Stop.
