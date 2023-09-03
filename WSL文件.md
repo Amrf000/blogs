@@ -32,6 +32,27 @@ sudo vi /etc/wsl.conf
 ```
 
 ### WSL mnt目录中kernel编译
+* 执行步骤
+```
+export http_proxy=http://x.x.x.x:1080
+export https_proxy=http://x.x.x.x:1080
+git config --global http.proxy http://x.x.x.x:1080
+git config --global https.proxy http://x.x.x.x:1080
+
+
+repo init -u https://android.googlesource.com/kernel/manifest -b common-android13-5.15 --depth=1
+repo sync --force-sync -j24 --current-branch --no-tags --no-clone-bundle --optimized-fetch --prune
+
+repo start br_local --all
+BUILD_CONFIG=common-modules/virtual-device/build.config.virtual_device.x86_64 build/build.sh -j24
+```
+```
+
+
+```
+
+
+
 * #### windows目录不区分大小写,会有如下的报错  
 
 ```bash
@@ -56,7 +77,8 @@ wsl1中执行上面的设置应该就可以了，wsl2中可能需要修改wsl.co
 options = case = dir
 ```
 * #### wsl1编译kernel报错
-
+clang 14 exec format error
+* #### 解决方案：  
 
 ```
 sudo patchelf --set-interpreter /lib64/ld-linux-x86-64.so.2 /mnt/f/work_code/android13_kernel1/prebuilts/clang/host/linux-x86/clang-r450784e/bin/clang.real
