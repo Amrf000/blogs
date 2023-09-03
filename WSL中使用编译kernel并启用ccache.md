@@ -5,7 +5,14 @@
 问题的现象是在wsl中/mnt/f/目录执行编译会卡住，发现问题是wsl 访问windows的hdfs文件io巨慢，看了一些帖子是wsl使用了一种网络协议处理和宿主windows的io导致性能相对wsl1满了至少一个数量级别，但是又不想只在wsl文件系统内进行相关操作，所以最后回滚会wsl1了；
 
 ```
-wsl --shutdown
+wsl --shutdownbuild/kernel$ ls -al build-tools/path/linux-x86/ccache*
+
+lrwxrwxrwx 1 lyw lyw 57 Sep 3 01:14 build-tools/path/linux-x86/ccache -> ../../../../../prebuilts/build-tools/linux-x86/bin/ccache
+
+lrwxrwxrwx 1 lyw lyw 63 Sep 3 01:17 build-tools/path/linux-x86/ccache-clang -> ../../../../../prebuilts/build-tools/linux-x86/bin/ccache-clang
+
+lrwxrwxrwx 1 lyw lyw 65 Sep 3 01:17 build-tools/path/linux-x86/ccache-clang++ -> ../../../../../prebuilts/build-tools/linux-x86/bin/ccache-clang++
+
 wsl --set-version Ubuntu-20.04 1
 wsl --set-default-version 1
 wsl -l -v 
