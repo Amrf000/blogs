@@ -1,0 +1,8 @@
+baseURL = "https://amrf000.github.io/blogs/"
+title = 'My New Hugo Site'
+languageCode = "en-us" 
+theme = "anatole"
+enableEmoji = true
+
+
+
