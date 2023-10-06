@@ -3,6 +3,52 @@ title = 'My New Hugo Site'
 languageCode = "en-us" 
 theme = "anatole"
 enableEmoji = true
+enableRobotsTXT = true
+mainSections = ["posts", "blog"]
 
+[params]
+customCss = ['css/custom.css']
+customJs = []
+profilePicture = "images/profile_pic.gif"
+mainSections = ["post", "blog"]
+title = "我是亚武"
+author = "Jane Doe"
+description = "Call me yahu"
+favicon = "favicons/"
+hidesidebar = true
 
+[params.math]
+enable = true
+use = "katex"
+
+[[params.socialIcons]]
+icon = "fa-envelope"
+title = "e-mail"
+url = "mailto:yawuliu@163.com"
+
+[Languages]
+  [Languages.en]
+  title = "My blog"
+  weight = 1
+  LanguageName = "EN"
+ 
+[menu]
+
+  [[menu.main]]
+  name = "首页"
+  identifier = "home"
+  weight = 100
+  url = "/"
+
+  [[menu.main]]
+  name = "博客"
+  weight = 200
+  identifier = "posts"
+  url = "/post/"
+
+  [[menu.main]]
+  name = "关于"
+  weight = 300
+  identifier = "about"
+  url = "/about/"
 
