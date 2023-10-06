@@ -1,0 +1,406 @@
+<!doctype html><html dir=ltr lang=en data-theme class="html theme--light"><head><title>Jane Doe
+|
+docker_swarm无法传递--device问题</title><meta charset=utf-8><meta name=generator content="Hugo 0.119.0"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name=author content="Jane Doe"><meta name=description content="Last Dec, I was the opening keynote speaker at DevRelCon London 2019. But as my title suggests… I almost turned this opportunity down because of all the negative stories I told myself."><link rel=stylesheet href=/blogs/scss/main.min.1147aa5bacb4bce677a0e264073829caedb82fd18ea07a5f1d80521f539d1c45.css integrity="sha256-EUeqW6y0vOZ3oOJkBzgpyu24L9GOoHpfHYBSH1OdHEU=" crossorigin=anonymous type=text/css><link rel=stylesheet href=/blogs/css/markupHighlight.min.73ccfdf28df555e11009c13c20ced067af3cb021504cba43644c705930428b00.css integrity="sha256-c8z98o31VeEQCcE8IM7QZ688sCFQTLpDZExwWTBCiwA=" crossorigin=anonymous type=text/css><link rel=stylesheet href=/blogs/css/custom.min.e9944a18f1e7eb69f73cca1a84df20078b7e7a9350e9fd2cdd035ac83e8fbfbf.css integrity="sha256-6ZRKGPHn62n3PMoahN8gB4t+epNQ6f0s3QNayD6Pv78=" crossorigin=anonymous media=screen><link rel=stylesheet href=/blogs/fontawesome/css/fontawesome.min.7d272de35b410fb165377550cdf9c4d3a80fbbcc961e111914e4d5c0eaf5729f.css integrity="sha256-fSct41tBD7FlN3VQzfnE06gPu8yWHhEZFOTVwOr1cp8=" crossorigin=anonymous type=text/css><link rel=stylesheet href=/blogs/fontawesome/css/solid.min.55d8333481b07a08e07cf6f37319753a2b47e99f4c395394c5747b48b495aa9b.css integrity="sha256-VdgzNIGwegjgfPbzcxl1OitH6Z9MOVOUxXR7SLSVqps=" crossorigin=anonymous type=text/css><link rel=stylesheet href=/blogs/fontawesome/css/regular.min.a7448d02590b43449364b6b5922ed9af5410abb4de4238412a830316dedb850b.css integrity="sha256-p0SNAlkLQ0STZLa1ki7Zr1QQq7TeQjhBKoMDFt7bhQs=" crossorigin=anonymous type=text/css><link rel=stylesheet href=/blogs/fontawesome/css/brands.min.9ed75a5d670c953fe4df935937674b4646f92674367e9e66eb995bb04e821647.css integrity="sha256-ntdaXWcMlT/k35NZN2dLRkb5JnQ2fp5m65lbsE6CFkc=" crossorigin=anonymous type=text/css><link rel="shortcut icon" href=/blogs/favicons/favicon.ico type=image/x-icon><link rel=apple-touch-icon sizes=180x180 href=/blogs/favicons/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/blogs/favicons/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/blogs/favicons/favicon-16x16.png><link rel=canonical href=https://amrf000.github.io/blogs/post/docker_swarm%E6%97%A0%E6%B3%95%E4%BC%A0%E9%80%92--device%E9%97%AE%E9%A2%98/><script type=text/javascript src=/blogs/js/anatole-header.min.f9132794301a01ff16550ed66763482bd848f62243d278f5e550229a158bfd32.js integrity="sha256-+RMnlDAaAf8WVQ7WZ2NIK9hI9iJD0nj15VAimhWL/TI=" crossorigin=anonymous></script>
+<script type=text/javascript src=/blogs/js/anatole-theme-switcher.min.d6d329d93844b162e8bed1e915619625ca91687952177552b9b3e211014a2957.js integrity="sha256-1tMp2ThEsWLovtHpFWGWJcqRaHlSF3VSubPiEQFKKVc=" crossorigin=anonymous></script><meta name=twitter:card content="summary"><meta name=twitter:title content="docker_swarm无法传递--device问题"><meta name=twitter:description content="Last Dec, I was the opening keynote speaker at DevRelCon London 2019. But as my title suggests… I almost turned this opportunity down because of all the negative stories I told myself."><meta property="og:title" content="docker_swarm无法传递--device问题"><meta property="og:description" content="Last Dec, I was the opening keynote speaker at DevRelCon London 2019. But as my title suggests… I almost turned this opportunity down because of all the negative stories I told myself."><meta property="og:type" content="article"><meta property="og:url" content="https://amrf000.github.io/blogs/post/docker_swarm%E6%97%A0%E6%B3%95%E4%BC%A0%E9%80%92--device%E9%97%AE%E9%A2%98/"><meta property="article:section" content="post"><meta property="article:published_time" content="2020-05-13T08:25:08+00:00"><meta property="article:modified_time" content="2020-05-13T08:25:08+00:00"><meta property="og:site_name" content="我是亚武"><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"post","name":"docker_swarm无法传递--device问题","headline":"docker_swarm无法传递--device问题","alternativeHeadline":"","description":"
+      Last Dec, I was the opening keynote speaker at DevRelCon London 2019. But as my title suggests… I almost turned this opportunity down because of all the negative stories I told myself.
+
+
+    ","inLanguage":"en","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/amrf000.github.io\/blogs\/post\/docker_swarm%E6%97%A0%E6%B3%95%E4%BC%A0%E9%80%92--device%E9%97%AE%E9%A2%98\/"},"author":{"@type":"Person","name":"Elisha Tan"},"creator":{"@type":"Person","name":"Elisha Tan"},"accountablePerson":{"@type":"Person","name":"Elisha Tan"},"copyrightHolder":{"@type":"Person","name":"Elisha Tan"},"copyrightYear":"2020","dateCreated":"2020-05-13T08:25:08.00Z","datePublished":"2020-05-13T08:25:08.00Z","dateModified":"2020-05-13T08:25:08.00Z","publisher":{"@type":"Organization","name":"Elisha Tan","url":"https://amrf000.github.io/blogs/","logo":{"@type":"ImageObject","url":"https:\/\/amrf000.github.io\/blogs\/favicons\/favicon-32x32.png","width":"32","height":"32"}},"image":[],"url":"https:\/\/amrf000.github.io\/blogs\/post\/docker_swarm%E6%97%A0%E6%B3%95%E4%BC%A0%E9%80%92--device%E9%97%AE%E9%A2%98\/","wordCount":"958","genre":[],"keywords":["developer relations","best practices","public speaking"]}</script></head><body class=body><div class=wrapper><aside class="wrapper__sidebar wrapper__sidebar--hidden"><div class="sidebar
+animated fadeInDown"><div class=sidebar__content><div class=sidebar__introduction><img class=sidebar__introduction-profileimage src=/blogs/images/profile_pic.gif alt="profile picture"><div class=sidebar__introduction-title><a href=/blogs>我是亚武</a></div><div class=sidebar__introduction-description><p>Call me yahu</p></div></div><ul class=sidebar__list><li class=sidebar__list-item><a href=mailto:yawuliu@163.com target=_blank rel="noopener me" aria-label=e-mail title=e-mail><i class="fa-envelope fa-2x" aria-hidden=true></i></a></li></ul></div><footer class="footer footer__sidebar"><ul class=footer__list><li class=footer__item>&copy;
+Jane Doe
+2023</li></ul></footer><script type=text/javascript src=/blogs/js/medium-zoom.min.1248fa75275e5ef0cbef27e8c1e27dc507c445ae3a2c7d2ed0be0809555dac64.js integrity="sha256-Ekj6dSdeXvDL7yfoweJ9xQfERa46LH0u0L4ICVVdrGQ=" crossorigin=anonymous></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.13.0/dist/katex.min.css integrity=sha384-t5CR+zwDAROtph0PXGte6ia8heboACF9R5l/DiY+WZ3P2lxNgvJkQk5n7GPvLMYw crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.13.0/dist/katex.min.js integrity=sha384-FaFLTlohFghEIZkw6VGwmf9ISTubWAVYW8tG8+w2LAIftJEULZABrF9PPFv+tVkH crossorigin=anonymous></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.13.0/dist/contrib/auto-render.min.js integrity=sha384-bHBqxz8fokvgoJ/sc17HODNxa42TlaEhB+w8ZJXTc2nZf1VgEaFZeZvT4Mznfz0v crossorigin=anonymous onload=renderMathInElement(document.body)></script></div></aside><main class="wrapper__main wrapper__main--fullscreen"><header class=header><div class="animated fadeInDown"><a role=button class=navbar-burger data-target=navMenu aria-label=menu aria-expanded=false><span aria-hidden=true class=navbar-burger__line></span>
+<span aria-hidden=true class=navbar-burger__line></span>
+<span aria-hidden=true class=navbar-burger__line></span></a><nav class=nav><ul class=nav__list id=navMenu><li class=nav__list-item><a href=/blogs/ title>首页</a></li><li class=nav__list-item><a href=/blogs/post/ title>博客</a></li><li class=nav__list-item><a href=/blogs/about/ title>关于</a></li></ul><ul class="nav__list nav__list--end"><li class=nav__list-item><div class=themeswitch><a title="Switch Theme"><i class="fas fa-adjust fa-fw" aria-hidden=true></i></a></div></li></ul></nav></div></header><div class="post
+animated fadeInDown"><div class=post__content><h1>Docker_swarm无法传递--Device问题</h1><ul class=post__meta><li class=post__meta-item><em class="fas fa-calendar-day post__meta-icon"></em>
+<span class=post__meta-text>Wed, May 13, 2020</span></li><li class=post__meta-item><em class="fas fa-stopwatch post__meta-icon"></em>
+<span class=post__meta-text>5-minute read</span></li></ul><p>宿主Ubuntu 20，docker镜像也是ubuntu，采用https://github.com/jenkinsci/docker-swarm-plugin插件，容器内使用unionfuse-fs命令报错fuse: device not found, try &lsquo;modprobe fuse&rsquo; first，需要传递&ndash;device /dev/fuse以运行容器，但是swarm engine并不支持；</p><h2 id=解决方案>解决方案：</h2><h3 id=1-解除ubuntu-宿主docker-apparmor限制>1. 解除Ubuntu 宿主docker apparmor限制</h3><pre tabindex=0><code>mv /sbin/apparmor_parser /sbin/apparmor_parser1
+</code></pre><h3 id=2-测试docker-device逃逸后执行unionfs-fuse测试命令测试成功>2. 测试docker device逃逸后执行unionfs-fuse测试命令测试成功</h3><pre tabindex=0><code>docker run -it --rm --cap-add=SYS_ADMIN -v /dev/fuse:/dev/fuse -v /tmp:/tmp dockers镜像:v1.1
+
+cd /tmp/dev/docker/$(cat /proc/self/cgroup | grep docker | head -1 | sed &#39;s/.*\/docker\/\(.*\)/\1/g&#39;) &amp;&amp; echo a &gt; devices.allow
+</code></pre><hr><pre tabindex=0><code>mkdir test1
+
+touch test1/t.txt
+
+mkdir test2
+
+unionfs-fuse -o cow &#34;test1=RO&#34; test2
+
+cd test2
+
+ls -al
+</code></pre><h3 id=3-由于docker-swarm-plugin插件没有传递cap-add的参数而实际查看docker-servicescreate接口是可以传递的所以需要修改插件patch如下>3. 由于docker-swarm-plugin插件没有传递cap-add的参数，而实际查看docker /services/create接口，是可以传递的，所以需要修改插件，patch如下</h3><pre tabindex=0><code>From fa78ab315c0a4cb46dc4ef7729cfd0293d2e8ba3 Mon Sep 17 00:00:00 2001
+
+From:  &lt;lyw@xm.com&gt;
+
+Date: Sat, 12 Aug 2023 19:00:11 +0800
+
+Subject: [PATCH] Add support for Custom Conatiner Args
+
+---
+
+ .../docker/swarm/DockerSwarmAgentTemplate.java | 12 ++++++++++--
+
+ .../docker/swarm/DockerSwarmComputerLauncher.java | 14 ++++++++------
+
+ .../swarm/docker/api/containers/ContainerSpec.java | 6 ++++--
+
+ .../swarm/docker/api/service/ServiceSpec.java | 4 ++--
+
+ .../docker/swarm/docker/api/task/TaskTemplate.java | 4 ++--
+
+ .../swarm/DockerSwarmAgentTemplate/config.jelly | 3 +++
+
+ 6 files changed, 29 insertions(+), 14 deletions(-)
+
+diff --git a/src/main/java/org/jenkinsci/plugins/docker/swarm/DockerSwarmAgentTemplate.java b/src/main/java/org/jenkinsci/plugins/docker/swarm/DockerSwarmAgentTemplate.java
+
+index 53be6a6..be6eee5 100644
+
+--- a/src/main/java/org/jenkinsci/plugins/docker/swarm/DockerSwarmAgentTemplate.java
+
++++ b/src/main/java/org/jenkinsci/plugins/docker/swarm/DockerSwarmAgentTemplate.java
+
+@@ -37,6 +37,7 @@ public class DockerSwarmAgentTemplate implements Describable&lt;DockerSwarmAgentTem
+
+ private boolean osWindows;
+
+ private String unixCommand;
+
+ private String windowsCommand;
+
++ private String capabilityAdd;
+
+ private String user;
+
+ private String workingDir;
+
+ private String metadata;
+
+@@ -58,7 +59,7 @@ public class DockerSwarmAgentTemplate implements Describable&lt;DockerSwarmAgentTem
+
+
+
+ @DataBoundConstructor
+
+ public DockerSwarmAgentTemplate(final String image, final String hostBinds, final String hostNamedPipes, final String dnsIps,
+
+- final String dnsSearchDomains, final String unixCommand,final String windowsCommand, final String user, final String workingDir,
+
++ final String dnsSearchDomains, final String unixCommand,final String windowsCommand,final String capabilityAdd,final String user, final String workingDir,
+
+ final String hosts, final String metadata, final String secrets, final String configs, final String label, final String cacheDir,
+
+ final String tmpfsDir, final String envVars, final long limitsNanoCPUs, final long limitsMemoryBytes,
+
+ final long reservationsNanoCPUs, final long reservationsMemoryBytes, String portBinds, final boolean osWindows,
+
+@@ -71,6 +72,7 @@ public class DockerSwarmAgentTemplate implements Describable&lt;DockerSwarmAgentTem
+
+ this.dnsSearchDomains = dnsSearchDomains;
+
+ this.unixCommand = unixCommand;
+
+ this.windowsCommand = windowsCommand;
+
++ this.capabilityAdd = capabilityAdd;
+
+ this.user = user;
+
+ this.workingDir = workingDir;
+
+ this.hosts = hosts;
+
+@@ -154,7 +156,9 @@ public class DockerSwarmAgentTemplate implements Describable&lt;DockerSwarmAgentTem
+
+ public String[] getWindowsCommandConfig() {
+
+ return StringUtils.isEmpty(this.windowsCommand) ? new String[] {} : this.windowsCommand.split(&#34;[\\r\\n\\s]+&#34;);
+
+ }
+
+-
+
++ public String[] getCapabilityAddConfig() {
+
++ return StringUtils.isEmpty(this.capabilityAdd) ? new String[] {} : this.capabilityAdd.split(&#34;[\\r\\n]+&#34;);
+
++ }
+
+ public String[] getWindowsCommandConfig(String windowsCommand) {
+
+ return StringUtils.isEmpty(windowsCommand) ? new String[] {} : windowsCommand.split(&#34;[\\r\\n\\s]+&#34;);
+
+ }
+
+@@ -266,6 +270,10 @@ public class DockerSwarmAgentTemplate implements Describable&lt;DockerSwarmAgentTem
+
+ return unixCommand;
+
+ }
+
+
+
++ public String getCapabilityAdd() {
+
++ return capabilityAdd;
+
++ }
+
++
+
+ public String getWindowsCommand() {
+
+ return windowsCommand;
+
+ }
+
+diff --git a/src/main/java/org/jenkinsci/plugins/docker/swarm/DockerSwarmComputerLauncher.java b/src/main/java/org/jenkinsci/plugins/docker/swarm/DockerSwarmComputerLauncher.java
+
+index b883765..a5a498e 100755
+
+--- a/src/main/java/org/jenkinsci/plugins/docker/swarm/DockerSwarmComputerLauncher.java
+
++++ b/src/main/java/org/jenkinsci/plugins/docker/swarm/DockerSwarmComputerLauncher.java
+
+@@ -112,11 +112,13 @@ public class DockerSwarmComputerLauncher extends JNLPLauncher {
+
+ }
+
+ }
+
+
+
+- launchContainer(finalCommand.toArray(new String[0]), configuration, envVars, dockerSwarmAgentTemplate.getWorkingDir(),
+
++ launchContainer(finalCommand.toArray(new String[0]), dockerSwarmAgentTemplate.getCapabilityAddConfig(),
+
++ configuration, envVars, dockerSwarmAgentTemplate.getWorkingDir(),
+
+ dockerSwarmAgentTemplate.getUser(), dockerSwarmAgentTemplate, listener, computer,
+
+ dockerSwarmAgentTemplate.getHostsConfig());
+
+ } else {
+
+- launchContainer(dockerSwarmAgentTemplate.getUnixCommandConfig(), configuration, envVars,
+
++ launchContainer(dockerSwarmAgentTemplate.getUnixCommandConfig(), dockerSwarmAgentTemplate.getCapabilityAddConfig(),
+
++ configuration, envVars,
+
+ dockerSwarmAgentTemplate.getWorkingDir(), dockerSwarmAgentTemplate.getUser(),
+
+ dockerSwarmAgentTemplate, listener, computer, dockerSwarmAgentTemplate.getHostsConfig());
+
+ }
+
+@@ -134,11 +136,11 @@ public class DockerSwarmComputerLauncher extends JNLPLauncher {
+
+ }
+
+ }
+
+
+
+- public void launchContainer(String[] commands, DockerSwarmCloud configuration, String[] envVars, String dir,
+
++ public void launchContainer(String[] commands, String[] capabilityAdd,DockerSwarmCloud configuration, String[] envVars, String dir,
+
+ String user, DockerSwarmAgentTemplate dockerSwarmAgentTemplate, TaskListener listener,
+
+ DockerSwarmComputer computer, String[] hosts) throws IOException {
+
+ DockerSwarmPlugin swarmPlugin = Jenkins.getInstance().getPlugin(DockerSwarmPlugin.class);
+
+- ServiceSpec crReq = createCreateServiceRequest(commands, configuration, envVars, dir, user,
+
++ ServiceSpec crReq = createCreateServiceRequest(commands, capabilityAdd, configuration, envVars, dir, user,
+
+ dockerSwarmAgentTemplate, computer, hosts);
+
+
+
+ setLimitsAndReservations(dockerSwarmAgentTemplate, crReq);
+
+@@ -178,10 +180,10 @@ public class DockerSwarmComputerLauncher extends JNLPLauncher {
+
+ dockerSwarmAgentTemplate.getPlacementArchitecture(), dockerSwarmAgentTemplate.getPlacementOperatingSystem());
+
+ }
+
+
+
+- private ServiceSpec createCreateServiceRequest(String[] commands, DockerSwarmCloud configuration, String[] envVars,
+
++ private ServiceSpec createCreateServiceRequest(String[] commands, String[] capabilityAdd, DockerSwarmCloud configuration, String[] envVars,
+
+ String dir, String user, DockerSwarmAgentTemplate dockerSwarmAgentTemplate, DockerSwarmComputer computer,
+
+ String[] hosts) throws IOException {
+
+- ServiceSpec crReq = new ServiceSpec(computer.getName(), dockerSwarmAgentTemplate.getImage(), commands, envVars,
+
++ ServiceSpec crReq = new ServiceSpec(computer.getName(), dockerSwarmAgentTemplate.getImage(), commands, capabilityAdd, envVars,
+
+ dir, user, hosts);
+
+ return crReq;
+
+ }
+
+diff --git a/src/main/java/org/jenkinsci/plugins/docker/swarm/docker/api/containers/ContainerSpec.java b/src/main/java/org/jenkinsci/plugins/docker/swarm/docker/api/containers/ContainerSpec.java
+
+index d9554cb..b5387a0 100755
+
+--- a/src/main/java/org/jenkinsci/plugins/docker/swarm/docker/api/containers/ContainerSpec.java
+
++++ b/src/main/java/org/jenkinsci/plugins/docker/swarm/docker/api/containers/ContainerSpec.java
+
+@@ -7,6 +7,7 @@ public class ContainerSpec {
+
+
+
+ public final String Image;
+
+ public final String[] Command;
+
++ public final String[] CapabilityAdd;
+
+ public final String[] Env;
+
+ public final String Dir;
+
+ public final String User;
+
+@@ -17,12 +18,13 @@ public class ContainerSpec {
+
+ public List&lt;Config&gt; Configs = new ArrayList&lt;&gt;();
+
+
+
+ public ContainerSpec() {
+
+- this(null, null, null, null, null, null);
+
++ this(null, null, null, null, null, null, null);
+
+ }
+
+
+
+- public ContainerSpec(String image, String[] cmd, String[] env, String dir, String user, String[] hosts) {
+
++ public ContainerSpec(String image, String[] cmd, String[] capabilityAdd, String[] env, String dir, String user, String[] hosts) {
+
+ this.Image = image;
+
+ this.Command = cmd;
+
++ this.CapabilityAdd= capabilityAdd;
+
+ this.Env = env;
+
+ this.Dir = dir;
+
+ this.User = user;
+
+diff --git a/src/main/java/org/jenkinsci/plugins/docker/swarm/docker/api/service/ServiceSpec.java b/src/main/java/org/jenkinsci/plugins/docker/swarm/docker/api/service/ServiceSpec.java
+
+index c9c984f..58d32cf 100755
+
+--- a/src/main/java/org/jenkinsci/plugins/docker/swarm/docker/api/service/ServiceSpec.java
+
++++ b/src/main/java/org/jenkinsci/plugins/docker/swarm/docker/api/service/ServiceSpec.java
+
+@@ -28,11 +28,11 @@ public class ServiceSpec extends ApiRequest {
+
+
+
+ public List&lt;Network&gt; Networks = new ArrayList&lt;&gt;();
+
+
+
+- public ServiceSpec(String name, String Image, String[] Cmd, String[] Env, String Dir, String User, String[] Hosts)
+
++ public ServiceSpec(String name, String Image, String[] Cmd, String[] capabilityAdd, String[] Env, String Dir, String User, String[] Hosts)
+
+ throws IOException {
+
+ super(HttpMethod.POST, &#34;/services/create&#34;, CreateServiceResponse.class, ResponseType.CLASS);
+
+ this.Name = name;
+
+- this.TaskTemplate = new TaskTemplate(Image, Cmd, Env, Dir, User, Hosts);
+
++ this.TaskTemplate = new TaskTemplate(Image, Cmd, capabilityAdd, Env, Dir, User, Hosts);
+
+ this.EndpointSpec = new EndpointSpec();
+
+ }
+
+
+
+diff --git a/src/main/java/org/jenkinsci/plugins/docker/swarm/docker/api/task/TaskTemplate.java b/src/main/java/org/jenkinsci/plugins/docker/swarm/docker/api/task/TaskTemplate.java
+
+index 962bf36..2efa04b 100755
+
+--- a/src/main/java/org/jenkinsci/plugins/docker/swarm/docker/api/task/TaskTemplate.java
+
++++ b/src/main/java/org/jenkinsci/plugins/docker/swarm/docker/api/task/TaskTemplate.java
+
+@@ -15,8 +15,8 @@ public class TaskTemplate {
+
+ // for reading from api
+
+ }
+
+
+
+- public TaskTemplate(String image, String[] cmd, String[] env, String dir, String user, String[] hosts) {
+
+- this.ContainerSpec = new ContainerSpec(image, cmd, env, dir, user, hosts);
+
++ public TaskTemplate(String image, String[] cmd, String[] capabilityAdd, String[] env, String dir, String user, String[] hosts) {
+
++ this.ContainerSpec = new ContainerSpec(image, cmd, capabilityAdd, env, dir, user, hosts);
+
+ }
+
+
+
+ public void setPlacement(String[] placementConstraints, String architecture, String operatingSystem) {
+
+diff --git a/src/main/resources/org/jenkinsci/plugins/docker/swarm/DockerSwarmAgentTemplate/config.jelly b/src/main/resources/org/jenkinsci/plugins/docker/swarm/DockerSwarmAgentTemplate/config.jelly
+
+index 1ae2b31..7f647f2 100755
+
+--- a/src/main/resources/org/jenkinsci/plugins/docker/swarm/DockerSwarmAgentTemplate/config.jelly
+
++++ b/src/main/resources/org/jenkinsci/plugins/docker/swarm/DockerSwarmAgentTemplate/config.jelly
+
+@@ -15,6 +15,9 @@
+
+ &lt;f:entry title=&#34;Windows Command&#34; field=&#34;windowsCommand&#34;&gt;
+
+ &lt;f:textbox value=&#34;${dockerSwarmAgentTemplate.windowsCommand}&#34; default=&#34;powershell.exe &amp;amp; { Invoke-WebRequest -TimeoutSec 20 -OutFile agent.jar %DOCKER_SWARM_PLUGIN_JENKINS_AGENT_JAR_URL%; if($?) { java -jar agent.jar -jnlpUrl %DOCKER_SWARM_PLUGIN_JENKINS_AGENT_JNLP_URL% -secret %DOCKER_SWARM_PLUGIN_JENKINS_AGENT_SECRET% -noReconnect } }&#34;/&gt;
+
+ &lt;/f:entry&gt;
+
++ &lt;f:entry title=&#34;CapabilityAdd&#34; field=&#34;capabilityAdd&#34;&gt;
+
++ &lt;f:textarea value=&#34;${dockerSwarmAgentTemplate.capabilityAdd}&#34; default=&#34;&#34;/&gt;
+
++ &lt;/f:entry&gt;
+
+ &lt;f:entry title=&#34;Working Directory&#34; field=&#34;workingDir&#34;&gt;
+
+ &lt;f:textbox value=&#34;${dockerSwarmAgentTemplate.workingDir}&#34; default=&#34;/tmp&#34;/&gt;
+
+ &lt;/f:entry&gt;
+
+--
+
+2.38.1.windows.1
+</code></pre></div><div class=post__footer><span><a class=tag href=/blogs/tags/developer-relations/>developer relations</a><a class=tag href=/blogs/tags/best-practices/>best practices</a><a class=tag href=/blogs/tags/public-speaking/>public speaking</a></span></div></div></main></div><footer class="footer footer__base"><ul class=footer__list><li class=footer__item>&copy;
+Jane Doe
+2023</li></ul></footer><script type=text/javascript src=/blogs/js/medium-zoom.min.1248fa75275e5ef0cbef27e8c1e27dc507c445ae3a2c7d2ed0be0809555dac64.js integrity="sha256-Ekj6dSdeXvDL7yfoweJ9xQfERa46LH0u0L4ICVVdrGQ=" crossorigin=anonymous></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.13.0/dist/katex.min.css integrity=sha384-t5CR+zwDAROtph0PXGte6ia8heboACF9R5l/DiY+WZ3P2lxNgvJkQk5n7GPvLMYw crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.13.0/dist/katex.min.js integrity=sha384-FaFLTlohFghEIZkw6VGwmf9ISTubWAVYW8tG8+w2LAIftJEULZABrF9PPFv+tVkH crossorigin=anonymous></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.13.0/dist/contrib/auto-render.min.js integrity=sha384-bHBqxz8fokvgoJ/sc17HODNxa42TlaEhB+w8ZJXTc2nZf1VgEaFZeZvT4Mznfz0v crossorigin=anonymous onload=renderMathInElement(document.body)></script></body></html>
